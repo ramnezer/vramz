@@ -131,5 +131,3 @@ VRAMZ is open-source software licensed under the
 [Apache License 2.0](LICENSE). The license permits use, modification and
 distribution, including commercial use, subject to its terms. Third-party
 notices are retained in [NOTICE.md](NOTICE.md).
-
-Use [CITATION.cff](CITATION.cff) to cite the work.
