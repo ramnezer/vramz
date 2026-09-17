@@ -6,7 +6,6 @@
 keeping colder application data compressed in GPU memory, restoring it on demand,
 and reducing the physical CUDA VMM backing needed at a settled residency snapshot.
 
-**Release:** `v1.0.0-rc1-research` · **Author:** Rami Nezer ·
 **Status:** frozen experimental research preview, not production-ready.
 
 > **Scope:** applications must explicitly use the VRAMZ API. Installing VRAMZ does
