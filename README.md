@@ -132,5 +132,4 @@ VRAMZ is open-source software licensed under the
 distribution, including commercial use, subject to its terms. Third-party
 notices are retained in [NOTICE.md](NOTICE.md).
 
-Use [CITATION.cff](CITATION.cff) to cite the work. Read
-[SECURITY.md](SECURITY.md) before reporting a security-sensitive issue.
+Use [CITATION.cff](CITATION.cff) to cite the work.
