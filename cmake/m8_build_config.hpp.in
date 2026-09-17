@@ -1,0 +1,18 @@
+#pragma once
+#include "vramz/detail/m7_driver_identity.hpp"
+#include "vramz/detail/cuda_compatibility.hpp"
+#include <string_view>
+namespace vramz::detail {
+struct M8LibraryIdentity final {
+    std::string_view path;
+    std::string_view sha256;
+    DriverFileIdentity identity;
+};
+inline constexpr std::string_view m8_source_sha256{"@VRAMZ_M8_SOURCE_SHA256@"};
+inline constexpr std::string_view m8_loader_path{"@VRAMZ_M8_LOADER_PATH@"};
+inline constexpr M8LibraryIdentity m8_driver{@VRAMZ_M8_DRIVER_IDENTITY@};
+inline constexpr M8LibraryIdentity m8_nvcomp{@VRAMZ_M8_NVCOMP_IDENTITY@};
+inline constexpr M8LibraryIdentity m8_cudart{@VRAMZ_M8_CUDART_IDENTITY@};
+inline constexpr NvidiaDriverRelease m8_expected_driver_release{@VRAMZ_M8_DRIVER_RELEASE@};
+inline constexpr std::int32_t m8_prior_driver_api = @VRAMZ_M8_PRIOR_DRIVER_API@;
+}

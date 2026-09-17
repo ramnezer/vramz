@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "release": "0.6.0-prehardware",
+  "minimum_cmake": "3.25",
+  "reference_cpu_lz4": "1.9.4",
+  "toolchain_validation_targets": {"gcc": "13.3.0", "clang": "18.1.3"},
+  "cuda": {
+    "development_release": "13.3.1",
+    "manifest": "https://developer.download.nvidia.com/compute/cuda/redist/redistrib_13.3.1.json",
+    "artifacts": [
+      {"filename": "cuda_cudart-linux-x86_64-13.3.29-archive.tar.xz", "sha256": "1e59c4888267d27ba1a9bd0f3669a6439db1334a96e754cd9013c7c73e18dc9d"},
+      {"filename": "cuda_crt-linux-x86_64-13.3.73-archive.tar.xz", "sha256": "1251aa9d668c607a103489cd2250773701e83a313e355578044622cf36713a9d"}
+    ],
+    "use": "headers and development linking only; no driver execution"
+  },
+  "nvcomp": {
+    "release": "5.3.0",
+    "build": "5.3.0.16",
+    "cuda_major": 13,
+    "manifest": "https://developer.download.nvidia.com/compute/nvcomp/redist/redistrib_5.3.0.json",
+    "artifact": "nvcomp-linux-x86_64-5.3.0.16_cuda13-archive.tar.xz",
+    "sha256": "2c36f5af63c37e4afe13d14f912e84130e6a05f07b066547b3e028c4ca54c866",
+    "use": "LLIF LZ4 adapter compile/link only"
+  },
+  "m3_scenario_sha256": "8094c716c4dad5e494eeaa7261b5aa3b8ff73670ee0b47c881e0049fe5a73948",
+  "m5_fake_sha256": "fb39d58d3f7196031c04d262b4ec9822bab324abbac3288b9fef7be24aeda7ee",
+  "real_hardware_validation": "NOT_TESTED"
+}

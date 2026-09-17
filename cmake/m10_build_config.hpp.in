@@ -1,0 +1,18 @@
+#pragma once
+#include "vramz/detail/m7_driver_identity.hpp"
+#include "vramz/detail/cuda_compatibility.hpp"
+#include <string_view>
+namespace vramz::detail {
+struct M10LibraryIdentity final {
+    std::string_view path;
+    std::string_view sha256;
+    DriverFileIdentity identity;
+};
+inline constexpr std::string_view m10_source_sha256{"@VRAMZ_M10_SOURCE_SHA256@"};
+inline constexpr std::string_view m10_loader_path{"@VRAMZ_M10_LOADER_PATH@"};
+inline constexpr M10LibraryIdentity m10_driver{@VRAMZ_M10_DRIVER_IDENTITY@};
+inline constexpr M10LibraryIdentity m10_nvcomp{@VRAMZ_M10_NVCOMP_IDENTITY@};
+inline constexpr M10LibraryIdentity m10_cudart{@VRAMZ_M10_CUDART_IDENTITY@};
+inline constexpr NvidiaDriverRelease m10_expected_driver_release{@VRAMZ_M10_DRIVER_RELEASE@};
+inline constexpr std::int32_t m10_prior_driver_api = @VRAMZ_M10_PRIOR_DRIVER_API@;
+}

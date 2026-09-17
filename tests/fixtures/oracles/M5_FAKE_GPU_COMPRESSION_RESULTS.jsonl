@@ -1,0 +1,4 @@
+{"name":"scaled_3x","fake_only":true,"budget":32768,"logical":98304,"raw_charge":4096,"stored_bytes":1334,"padded_compressed":1472,"total_charge":5568,"peak_charge":20800,"effective_ratio":3.0}
+{"name":"granularity","fake_only":true,"granularity":4096,"logical":2097152,"stored_bytes":8235,"padded_compressed":12288,"saved_bytes":2084864}
+{"name":"granularity","fake_only":true,"granularity":65536,"logical":2097152,"stored_bytes":8235,"padded_compressed":65536,"saved_bytes":2031616}
+{"name":"granularity","fake_only":true,"granularity":2097152,"logical":2097152,"stored_bytes":8235,"padded_compressed":2097152,"saved_bytes":0}

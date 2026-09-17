@@ -1,0 +1,18 @@
+#pragma once
+#include "vramz/detail/m7_driver_identity.hpp"
+#include "vramz/detail/cuda_compatibility.hpp"
+#include <string_view>
+namespace vramz::detail {
+struct M11LibraryIdentity final {
+    std::string_view path;
+    std::string_view sha256;
+    DriverFileIdentity identity;
+};
+inline constexpr std::string_view m11_source_sha256{"@VRAMZ_M11_SOURCE_SHA256@"};
+inline constexpr std::string_view m11_loader_path{"@VRAMZ_M11_LOADER_PATH@"};
+inline constexpr M11LibraryIdentity m11_driver{@VRAMZ_M11_DRIVER_IDENTITY@};
+inline constexpr M11LibraryIdentity m11_nvcomp{@VRAMZ_M11_NVCOMP_IDENTITY@};
+inline constexpr M11LibraryIdentity m11_cudart{@VRAMZ_M11_CUDART_IDENTITY@};
+inline constexpr NvidiaDriverRelease m11_expected_driver_release{@VRAMZ_M11_DRIVER_RELEASE@};
+inline constexpr std::int32_t m11_prior_driver_api = @VRAMZ_M11_PRIOR_DRIVER_API@;
+}

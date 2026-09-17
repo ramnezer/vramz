@@ -1,0 +1,18 @@
+#pragma once
+#include "vramz/detail/m7_driver_identity.hpp"
+#include "vramz/detail/cuda_compatibility.hpp"
+#include <string_view>
+namespace vramz::detail {
+struct M12LibraryIdentity final {
+    std::string_view path;
+    std::string_view sha256;
+    DriverFileIdentity identity;
+};
+inline constexpr std::string_view m12_source_sha256{"@VRAMZ_M12_SOURCE_SHA256@"};
+inline constexpr std::string_view m12_loader_path{"@VRAMZ_M12_LOADER_PATH@"};
+inline constexpr M12LibraryIdentity m12_driver{@VRAMZ_M12_DRIVER_IDENTITY@};
+inline constexpr M12LibraryIdentity m12_nvcomp{@VRAMZ_M12_NVCOMP_IDENTITY@};
+inline constexpr M12LibraryIdentity m12_cudart{@VRAMZ_M12_CUDART_IDENTITY@};
+inline constexpr NvidiaDriverRelease m12_expected_driver_release{@VRAMZ_M12_DRIVER_RELEASE@};
+inline constexpr std::int32_t m12_prior_driver_api = @VRAMZ_M12_PRIOR_DRIVER_API@;
+}

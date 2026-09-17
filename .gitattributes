@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.tar.gz binary
+*.deb binary
+*.zip binary

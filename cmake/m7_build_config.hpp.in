@@ -1,0 +1,17 @@
+#pragma once
+
+#include <cstdint>
+#include <string_view>
+
+namespace vramz::detail {
+
+inline constexpr std::string_view m7_approved_driver_path{"@VRAMZ_M7_DRIVER_PATH_ESCAPED@"};
+inline constexpr std::string_view m7_approved_driver_sha256{"@VRAMZ_M7_DRIVER_SHA256_VALUE@"};
+inline constexpr std::string_view m7_source_sha256{"@VRAMZ_M7_SOURCE_SHA256@"};
+inline constexpr std::uint64_t m7_driver_device{@VRAMZ_M7_DRIVER_device@ULL};
+inline constexpr std::uint64_t m7_driver_inode{@VRAMZ_M7_DRIVER_inode@ULL};
+inline constexpr std::uint64_t m7_driver_size{@VRAMZ_M7_DRIVER_size@ULL};
+inline constexpr std::uint64_t m7_driver_mtime_ns{@VRAMZ_M7_DRIVER_mtime_ns@ULL};
+inline constexpr std::uint64_t m7_driver_ctime_ns{@VRAMZ_M7_DRIVER_ctime_ns@ULL};
+
+} // namespace vramz::detail

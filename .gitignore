@@ -1,0 +1,44 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+Testing/
+compile_commands.json
+
+# Compiled objects and libraries
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Cache and temporary files
+.cache/
+*.tmp
+*.temp
+*.log
+*.swp
+*~
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Local environment
+.env
+.env.*

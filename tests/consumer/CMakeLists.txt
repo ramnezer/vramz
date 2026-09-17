@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.25)
+project(VRAMZPublicConsumer LANGUAGES CXX)
+find_package(VRAMZ 1.0 CONFIG REQUIRED)
+add_executable(vramz-public-consumer main.cpp)
+target_link_libraries(vramz-public-consumer PRIVATE VRAMZ::vramz)
+target_compile_options(vramz-public-consumer PRIVATE -Wall -Wextra -Wpedantic -Werror)

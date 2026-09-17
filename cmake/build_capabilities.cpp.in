@@ -1,0 +1,10 @@
+#include "vramz/capabilities.hpp"
+
+namespace vramz {
+BuildCapabilities build_capabilities() noexcept {
+    return {"@PROJECT_VERSION@-rc1", "@VRAMZ_LZ4_VERSION@",
+            "@CUDAToolkit_VERSION@", "@nvcomp_VERSION@",
+            @VRAMZ_BUILD_CPU_LZ4@, @VRAMZ_BUILD_CUDA@, @VRAMZ_BUILD_NVCOMP@,
+            @VRAMZ_BUILD_PHYSICAL@, HardwareValidationState::not_tested};
+}
+} // namespace vramz

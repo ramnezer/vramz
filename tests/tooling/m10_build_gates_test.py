@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""M10 configuration and static ELF rejection tests; no inspected executable is run."""
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+sys.dont_write_bytecode = True
+SOURCE = Path(__file__).resolve().parents[2]
+
+
+class Gates(unittest.TestCase):
+    def configure(self, values):
+        with tempfile.TemporaryDirectory(prefix="vramz-m10-gates-") as name:
+            root = Path(name)
+            (root / "CMakeLists.txt").write_text(
+                'cmake_minimum_required(VERSION 3.25)\nproject(M10Gates NONE)\n'
+                f'include("{SOURCE}/cmake/M7RawSmoke.cmake")\n'
+                f'include("{SOURCE}/cmake/M8CompressionSmoke.cmake")\n'
+                f'include("{SOURCE}/cmake/M10MultiChunkResidencySmoke.cmake")\n'
+                'vramz_add_m10_smoke()\n'
+                'if(TARGET vramz-m10-multi-chunk-residency-smoke)\n'
+                'message(FATAL_ERROR "unexpected physical target")\nendif()\n')
+            result = subprocess.run(["cmake", "-S", name, "-B", str(root / "build"),
+                *[f"-D{k}={v}" for k, v in values.items()]],
+                capture_output=True, text=True, timeout=30)
+            return result.returncode, result.stdout + result.stderr
+
+    def test_default_has_no_physical_target(self):
+        self.assertEqual(self.configure({})[0], 0)
+
+    def test_each_gate_is_required(self):
+        for key in ("VRAMZ_ALLOW_REAL_NVCOMP_EXECUTION", "VRAMZ_ALLOW_REAL_GPU_EXECUTION",
+                    "VRAMZ_ENABLE_CUDA", "VRAMZ_ENABLE_NVCOMP", "VRAMZ_ENABLE_CPU_LZ4"):
+            with self.subTest(key=key):
+                status, text = self.configure({**self.physical_values(), key: "OFF",
+                                              "VRAMZ_M10_SOURCE_SHA256": "a" * 64})
+                self.assertNotEqual(status, 0)
+                self.assertIn("both execution gates ON", text)
+        self.assertNotEqual(self.configure({"VRAMZ_ALLOW_REAL_NVCOMP_EXECUTION": "ON"})[0], 0)
+
+    def test_m7_and_m10_are_exclusive(self):
+        status, text = self.configure({"VRAMZ_BUILD_M7_RAW_SMOKE": "ON", "VRAMZ_BUILD_M10_MULTI_CHUNK_RESIDENCY_SMOKE": "ON"})
+        self.assertNotEqual(status, 0)
+        self.assertIn("mutually exclusive", text)
+
+    def physical_values(self):
+        return {**{key: "ON" for key in ("VRAMZ_BUILD_M10_MULTI_CHUNK_RESIDENCY_SMOKE", "VRAMZ_ENABLE_CUDA",
+            "VRAMZ_ENABLE_NVCOMP", "VRAMZ_ENABLE_CPU_LZ4", "VRAMZ_ALLOW_REAL_GPU_EXECUTION",
+            "VRAMZ_ALLOW_REAL_NVCOMP_EXECUTION")}, "VRAMZ_SANITIZER": "none", "VRAMZ_BUILD_TESTS": "OFF"}
+
+    def test_tests_and_sanitizers_cannot_enable_execution(self):
+        for key, value in (("VRAMZ_BUILD_TESTS", "ON"), ("VRAMZ_ENABLE_FUZZING", "ON"), ("VRAMZ_SANITIZER", "address")):
+            with self.subTest(key=key):
+                status, text = self.configure({**self.physical_values(), key: value})
+                self.assertNotEqual(status, 0)
+                self.assertIn("tests/fuzzing/sanitizers OFF", text)
+
+    def test_m7_obsolete_or_invalid_hash_never_identifies_m10(self):
+        for digest in ("", "a" * 63, "0" * 64, "A" * 64,
+                       "56b3a392464febf9b5ec8f49653b68a2de5bd50c2bd814a1d38ac7b133334c76",
+                       "ed54613a38f4532f4f12b80020bcec191dc11045225541995c0cc2132e2d4b94",
+                       "929433a01d724d7c8d8bf9ac7e8e251c5718a17f844f02f9da434ef84fdc698d",
+                       "c67dc98206470c74045aa0c7ed1ae69ae596b2f7687a966cab6c6b7e3dec93bd"):
+            with self.subTest(digest=digest):
+                status, text = self.configure({**self.physical_values(), "VRAMZ_M10_SOURCE_SHA256": digest})
+                self.assertNotEqual(status, 0)
+                self.assertIn("own reviewed source", text)
+
+    def test_missing_reviewed_lz4_prefix_is_rejected(self):
+        status, text = self.configure({**self.physical_values(),
+            "VRAMZ_M10_SOURCE_SHA256": "a" * 64})
+        self.assertNotEqual(status, 0)
+        self.assertIn("VRAMZ_REVIEWED_LZ4_PREFIX", text)
+
+    def test_unreviewed_or_shared_lz4_is_rejected_before_dependency_setup(self):
+        for library in ("", "/usr/lib/x86_64-linux-gnu/liblz4.so", "/tmp/liblz4.a"):
+            with self.subTest(library=library):
+                status, text = self.configure({**self.physical_values(),
+                    "VRAMZ_M10_SOURCE_SHA256": "a" * 64, "VRAMZ_LZ4_LIBRARY": library,
+                    "VRAMZ_LZ4_INCLUDE_DIR": "/usr/include", "VRAMZ_LZ4_VERSION": "1.9.4",
+                    "VRAMZ_REVIEWED_LZ4_PREFIX": "/test-fixtures/reviewed-lz4"})
+                self.assertNotEqual(status, 0)
+                self.assertIn("reviewed isolated static LZ4", text)
+
+    def test_gate_excludes_m8(self):
+        status, text = self.configure({"VRAMZ_BUILD_M8_COMPRESSION_SMOKE": "ON", "VRAMZ_BUILD_M10_MULTI_CHUNK_RESIDENCY_SMOKE": "ON"})
+        self.assertNotEqual(status, 0)
+        self.assertIn("mutually exclusive", text)
+
+    def test_gate_excludes_m9(self):
+        status, text = self.configure({"VRAMZ_BUILD_M9_PHYSICAL_SAVINGS_SMOKE": "ON", "VRAMZ_BUILD_M10_MULTI_CHUNK_RESIDENCY_SMOKE": "ON"})
+        self.assertNotEqual(status, 0)
+        self.assertIn("mutually exclusive", text)
+
+    def test_physical_main_is_object_only_in_quality_builds(self):
+        module = (SOURCE / "cmake/M10MultiChunkResidencySmoke.cmake").read_text()
+        fallback = module.split("elseif(VRAMZ_ENABLE_CUDA AND VRAMZ_ENABLE_NVCOMP)")[1]
+        self.assertIn("add_library(${target} OBJECT", fallback)
+        self.assertNotIn("add_executable", fallback)
+        self.assertNotIn("POST_BUILD", module)
+        self.assertNotIn("add_test", module)
+        self.assertNotIn("install(", module)
+        self.assertIn("--binary \"$<TARGET_FILE:${target}>\"", module)
+        self.assertIn("m8-elf-check.py", module)
+        main = (SOURCE / "tools/vramz-m10-multi-chunk-residency-smoke/main.cpp").read_text()
+        self.assertIn("VRAMZ_M10_MULTI_CHUNK_RESIDENCY_ONLY", main)
+        self.assertIn("constexpr bool enabled = false", main)
+
+    def test_prehardware_explicitly_rejects_m10(self):
+        script = (SOURCE / "tools/vramz-prehardware-check.py").read_text()
+        self.assertIn("VRAMZ_BUILD_M10_MULTI_CHUNK_RESIDENCY_SMOKE", script)
+        self.assertIn("vramz-m10-multi-chunk-residency-smoke", script)
+
+if __name__ == "__main__":
+    unittest.main()

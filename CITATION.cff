@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use VRAMZ in research or technical work, please cite this software."
+title: "VRAMZ: Experimental GPU-Resident Compressed-Memory Runtime"
+type: software
+authors:
+  - family-names: Nezer
+    given-names: Rami
+version: "1.0.0-rc1-research"
+license: Apache-2.0
+abstract: >-
+  VRAMZ is an experimental userspace runtime for NVIDIA GPUs that explores
+  lossless GPU-resident compression, CUDA VMM-backed storage, adaptive reclaim,
+  and exact physical-backing accounting to increase effective logical GPU
+  capacity for explicitly integrated applications.
+keywords:
+  - gpu
+  - cuda
+  - memory
+  - compression
+  - vmm
+  - nvcomp
+  - research

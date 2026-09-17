@@ -1,0 +1,74 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "gcc-debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/gcc-debug",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "VRAMZ_ENABLE_CUDA": "OFF", "VRAMZ_ENABLE_NVCOMP": "OFF" }
+    },
+    {
+      "name": "gcc-release",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/gcc-release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "clang-debug",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/clang-debug",
+      "cacheVariables": { "CMAKE_CXX_COMPILER": "clang++", "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "clang-release",
+      "inherits": "clang-debug",
+      "binaryDir": "${sourceDir}/build/clang-release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "asan",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/asan",
+      "cacheVariables": { "VRAMZ_SANITIZER": "address" }
+    },
+    {
+      "name": "ubsan",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/ubsan",
+      "cacheVariables": { "VRAMZ_SANITIZER": "undefined" }
+    },
+    {
+      "name": "lsan",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/lsan",
+      "cacheVariables": { "VRAMZ_SANITIZER": "leak" }
+    },
+    {
+      "name": "tsan",
+      "inherits": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/tsan",
+      "cacheVariables": { "VRAMZ_SANITIZER": "thread" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "gcc-debug", "configurePreset": "gcc-debug" },
+    { "name": "gcc-release", "configurePreset": "gcc-release" },
+    { "name": "clang-debug", "configurePreset": "clang-debug" },
+    { "name": "clang-release", "configurePreset": "clang-release" },
+    { "name": "asan", "configurePreset": "asan" },
+    { "name": "ubsan", "configurePreset": "ubsan" },
+    { "name": "lsan", "configurePreset": "lsan" },
+    { "name": "tsan", "configurePreset": "tsan" }
+  ],
+  "testPresets": [
+    { "name": "gcc-debug", "configurePreset": "gcc-debug", "output": { "outputOnFailure": true } },
+    { "name": "gcc-release", "configurePreset": "gcc-release", "output": { "outputOnFailure": true } },
+    { "name": "clang-debug", "configurePreset": "clang-debug", "output": { "outputOnFailure": true } },
+    { "name": "clang-release", "configurePreset": "clang-release", "output": { "outputOnFailure": true } },
+    { "name": "asan", "configurePreset": "asan", "output": { "outputOnFailure": true } },
+    { "name": "ubsan", "configurePreset": "ubsan", "output": { "outputOnFailure": true } },
+    { "name": "lsan", "configurePreset": "lsan", "output": { "outputOnFailure": true } },
+    { "name": "tsan", "configurePreset": "tsan", "output": { "outputOnFailure": true } }
+  ]
+}

@@ -1,0 +1,14 @@
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  cert-err*,
+  cert-oop*,
+  performance-*,
+  -performance-enum-size,
+  portability-*,
+  modernize-use-nullptr,
+  modernize-use-override
+WarningsAsErrors: '*'
+HeaderFilterRegex: '^(include|src)/vramz/|/include/vramz/|/src/'
+FormatStyle: file
