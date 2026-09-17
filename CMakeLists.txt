@@ -274,7 +274,7 @@ install(FILES include/vramz/runtime.hpp include/vramz/config.hpp include/vramz/p
     include/vramz/checked.hpp include/vramz/crc32c.hpp
     include/vramz/performance.hpp include/vramz/timing.hpp
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/vramz")
-install(FILES README.md LICENSE NOTICE.md CITATION.cff SECURITY.md
+install(FILES README.md LICENSE NOTICE.md CITATION.cff
     DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/vramz")
 if(VRAMZ_ENABLE_PHYSICAL_RUNTIME)
     include(cmake/Packaging.cmake)
